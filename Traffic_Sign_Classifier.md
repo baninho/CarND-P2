@@ -131,9 +131,9 @@ I first train the model with dropout disabled for ten epochs which gave me a val
 
 
 My final model results were:
-* training set accuracy of 0.988
-* validation set accuracy of 0.962
-* test set accuracy of 0.948
+* training set accuracy of 0.994
+* validation set accuracy of 0.976
+* test set accuracy of 0.962
 
 I chose to use a slightly modified Sermanet/LeCun implementation because they show the efficacy of their architecture in the suggested paper. I experimented with the layer width, finally compromising on an acceptable training duration while keeping the most prominent architecture features. My boundary condition was meeting a validation accuracy of 0.93 or higher as required. I use sigmoid activation instead of relus because me first results with relu activation units showed close to random accuracies both in training and validation, not improving during ten epochs of training. 
  
@@ -159,64 +159,71 @@ Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| No Passing      		| Stop sign   									| 
-| 100 km/h     			| U-turn 										|
-| Right of Way Next	Intersection| Yield									|
-| 50 km/h	      		| Bumpy Road					 				|
-| Stop					| Slippery Road      							|
+| No Passing      		| No entry   									| 
+| 100 km/h     			| No passing 										|
+| Right of Way Next	Intersection| Beware of ice/snow									|
+| 50 km/h	      		| No passing					 				|
+| Stop					| Stop      							|
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 1 of the 5 traffic signs, which gives an accuracy of 20%. This compares highly unfavorably to the accuracy on the test set of 96.2%.
+
+Possible explainations for this dramatic decline include:
+
+* mistakes on the code handling the prediction
+* overfitting to features present simultaneously in training, validation and test sets but absent in the images
 
 ####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+Notably the prediction with the least confidence of 42.5% is the only correct one. This may be indicative of either mistakes in some assignment in the code or a dramatic bias toward certain features that only appear in the provided traffic sign images.
+
+For the first image, the model is highly confident that this is a no entry sign (probability of .858), while it is actually a no passing sign. The correct prediction does not appear on the Top five list. This may be due to the fact that this is an image of the sign on an electronic display, which reverses the color of background and pictograms. The top five soft max probabilities were
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| 85.8%         			| No entry   									| 
+| 11.3%     				| Turn right ahead 										|
+| 1.9%					| Keep right											|
+| 0.8%	      			| Stop					 				|
+| 0.1%				    | No passing      							|
 
 
-For the second image ... 
-
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
-
-For the third image ... 
+For the second image, the model is confident that this is a no entry sign (probability of .593), while it is actually a speed limit (100) sign. The correct prediction does not appear on the Top five list. As with the first image, this may be due to the fact that this is an image of the sign on an electronic display. The top five soft max probabilities were
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| 59.3% 				| No passing 									| 
+| 25.1% 				| Stop 											|
+| 10.8% 				| Yield 										| 
+| 2.1% 					| Turn left ahead 								|
+| 1.7% 					| No passing for vehicles over 3.5 metric tons 	|
 
-For the fourth image ... 
-
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
-
-For the fifth image ... 
+For the third image, the model is confident that this is a no entry sign (probability of .595), while it is actually a right of way at next intersection sign. The correct prediction does not appear on the Top five list. This image has a slightly suboptimal lighting, but otherwise very clearly visible. The top five soft max probabilities were
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+|59.5%		|Beware of ice/snow|
+|14.6%		|Bicycles crossing|
+|10.2%		|Double curve|
+|6.9%		|Wild animals crossing|
+|5.2%		|Slippery road|
+
+For the fourth image, the model is confident that this is a no entry sign (probability of .593), while it is actually a speed limit (50) sign. The correct prediction does not appear on the Top five list. The sign is clearly visible and the prediction failure unexpected. The top five soft max probabilities were
+
+| Probability         	|     Prediction	        					| 
+|:---------------------:|:---------------------------------------------:| 
+|59.3%		|No passing|
+|40.1%		|Stop|
+|0.3%		|Turn left ahead|
+|0.1%		|Keep right|
+|0.0%		|No entry|
+
+For the fifth image, the model is notably the least certain of the five examples that this is a stop sign (probability of .425), and the image does contain a stop sign. The top five soft max probabilities were
+
+| Probability         	|     Prediction	        					| 
+|:---------------------:|:---------------------------------------------:| 
+|42.5%		|Stop|
+|24.0%		|Double curve|
+|15.7%		|Beware of ice/snow|
+|11.5%		|Speed limit (60km/h)|
+|4.8%		|Slippery road|
